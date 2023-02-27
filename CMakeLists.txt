@@ -57,7 +57,7 @@ IF (NOT EXISTS "${PackagesPropertiesPath}/packagesProperties.txt")
 endif()
 
 MACRO (FIND_IN_CMAKE_CACHE_FILE pattern result)
-    FILE   (STRINGS           "${PackagesPropertiesPath}/packagesProperties.txt" FullResult REGEX ${pattern})
+    FILE   (STRINGS           "${PackagesPropertiesPath}/packagesProperties.txt" FullResult REGEX ${pattern})	
     STRING (LENGTH            ${FullResult} ResFullLen)
     STRING (FIND              ${FullResult} "=" CharacterEqual)
     MATH   (EXPR ResStartPos "${CharacterEqual} + 1")
@@ -82,13 +82,6 @@ GET_PACKAGES_PROPERTY (PackageName        PackageLibsNames)
 
 SET          (BuildPath ${CurrentPath}/Build)
 REMOVE_FILES ("${BuildPath}")
-
-SOURCE_GROUP               (TREE                              ${ProjectIncludePath} PREFIX "" FILES ${ProjectFilesAndFolders})
-LINK_DIRECTORIES           (${ProjectName}                    ${PackageLibsPaths})
-ADD_EXECUTABLE             (${ProjectName}                    ${ProjectFilesAndFolders})
-TARGET_INCLUDE_DIRECTORIES (${ProjectName} PUBLIC             ${ProjectPathsLists} ${PackageIncludesPaths})
-TARGET_LINK_LIBRARIES      (${ProjectName}                    ${CONAN_LIBS_GTEST} ${PackageLibsNames})
-TARGET_COMPILE_FEATURES    (${ProjectName} PUBLIC cxx_std_17)
 
 SOURCE_GROUP               (TREE                              ${TestIncludePath} PREFIX "" FILES ${TestFilesAndFolders})
 LINK_DIRECTORIES           (${TestsName}                      ${BuildPath}/lib ${PackageLibsPaths})

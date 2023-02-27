@@ -4,13 +4,13 @@ import os
 
 class Conan(ConanFile):
     name            = "Button"
-    version         = "1.1"
+    version         = "1.0"
     user            = "ssitkowx"
     channel         = "stable"
     license         = "freeware"
     repoUrl         = "https://github.com/ssitkowx"
     url             = repoUrl + '/' + name + '.git'
-    description     = "Template for projects and packages"
+    description     = "General class for Button"
     settings        = "os", "compiler", "build_type", "arch"
     options         = {"shared": [True, False]}
     default_options = "shared=False"
@@ -22,7 +22,7 @@ class Conan(ConanFile):
     packagesPath    = "/home/sylwester/.conan/data"
     downloadsPath   = "/home/sylwester/.conan/download"
     packages        = ["Utils/1.1@ssitkowx/stable",
-                       "Logger/1.1@ssitkowx/stable", 
+                       "Logger/1.1@ssitkowx/stable",
                        "LoggerHw/1.1@ssitkowx/stable"]
 
     def source (self):   
