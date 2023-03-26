@@ -36,6 +36,7 @@ class Button
         explicit Button (const ButtonSpace::TimeMax vTimeMax) : timeMax (vTimeMax) { }
         ~Button () = default;
 
+        bool                IsTouched  (void) { return derivedType.IsTouched ();                                    }
         bool                IsPressed  (void) { return (Event () == ButtonSpace::EState::ePressed ) ? true : false; }
         bool                IsReleased (void) { return (Event () == ButtonSpace::EState::eReleased) ? true : false; }
         ButtonSpace::EState Event      (void)
@@ -45,7 +46,7 @@ class Button
             static uint8_t             timePressed;
             static uint8_t             timeReleased;
 
-            if (isTouched () == true)
+            if (IsTouched () == true)
             {
                 if (isPressed == false)
                 {
@@ -82,10 +83,7 @@ class Button
 
     private:
         const ButtonSpace::TimeMax timeMax;
-
-        bool isTouched  (void) { return derivedType.isTouched (); }
 };
-
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// END OF FILE ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

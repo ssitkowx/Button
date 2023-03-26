@@ -22,17 +22,17 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
 {
     LOGW (MODULE, "CheckIfButtonIsReleased");
 
-    EXPECT_CALL (oButtonHw, isTouched ()).WillRepeatedly (Return (true));
+    EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     Sequence seq;
     for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::TimeMax.Pressed; pressedNum++)
     {
-        EXPECT_CALL (oButtonHw, isTouched ()).InSequence (seq).WillOnce (Return (true));
+        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
 
     for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::TimeMax.Released; releasedNum++)
     {
-        EXPECT_CALL (oButtonHw, isTouched ()).InSequence (seq).WillOnce (Return (false));
+        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
     }
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
@@ -58,7 +58,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsPressed)
 {
     LOGW (MODULE, "CheckIfButtonIsPressed");
 
-    EXPECT_CALL (oButtonHw, isTouched ()).WillRepeatedly (Return (true));
+    EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
     for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Pressed; eventNum++)
@@ -74,7 +74,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsUntouchedAfterTooShortTimePressed)
 {
     LOGW (MODULE, "CheckIfButtonIsUntouchedAfterTooShortTimePressed");
 
-    EXPECT_CALL (oButtonHw, isTouched ()).WillRepeatedly (Return (true));
+    EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
     for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Pressed - ONE; eventNum++)

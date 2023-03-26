@@ -17,7 +17,7 @@ class ButtonHw final : public Button <ButtonHw>
        explicit ButtonHw (const ButtonSpace::TimeMax vTimeMax) : Button <ButtonHw> (vTimeMax) { }
        ~ButtonHw () = default;
 
-        MOCK_METHOD0 (isTouched , bool (void));
+        MOCK_METHOD0 (IsTouched , bool (void));
         MOCK_METHOD0 (IsPressed , bool (void));
         MOCK_METHOD0 (IsReleased, bool (void));
 };
