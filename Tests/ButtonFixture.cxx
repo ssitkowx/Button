@@ -25,18 +25,18 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
     EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::TimeMax.Pressed; pressedNum++)
+    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
 
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::TimeMax.Released; releasedNum++)
+    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
     }
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Pressed; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed; eventNum++)
     {
         ASSERT_EQ (ButtonSpace::EState::eUntouched, state);
         state = oButtonHw.Event ();
@@ -45,7 +45,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
     ASSERT_EQ (ButtonSpace::EState::ePressed, state);
 
     state = ButtonSpace::EState::eUntouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Released; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Released; eventNum++)
     {
         ASSERT_EQ (ButtonSpace::EState::eUntouched, state);
         state = oButtonHw.Event ();
@@ -61,7 +61,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsPressed)
     EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Pressed; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed; eventNum++)
     {
         EXPECT_EQ (ButtonSpace::EState::eUntouched, state);
         state = oButtonHw.Event ();
@@ -77,7 +77,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsUntouchedAfterTooShortTimePressed)
     EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::TimeMax.Pressed - ONE; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed - ONE; eventNum++)
     {
         EXPECT_EQ (ButtonSpace::EState::eUntouched, state);
         state = oButtonHw.Event ();

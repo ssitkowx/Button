@@ -17,12 +17,12 @@ class ButtonFixture : public ::testing::Test
     public:
         static constexpr char *           MODULE     = (char *)"ButtonFixture";
         const uint8_t                     Histeresis = TWO;
-        const struct ButtonSpace::TimeMax TimeMax    = { FOUR,  
+        const struct ButtonSpace::Timeout Timeout    = { FOUR,  
                                                          EIGHT
                                                        };
         ButtonHw                          oButtonHw;
 
-        ButtonFixture () : oButtonHw (TimeMax) { }
+        ButtonFixture () : oButtonHw (Timeout) { }
         
         void TestBody () override { }
         void SetUp    () override { }

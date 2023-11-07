@@ -19,7 +19,7 @@ namespace ButtonSpace
         eUntouched
     };
 
-    struct TimeMax
+    struct Timeout
     {
         uint8_t Pressed;
         uint8_t Released;
@@ -33,7 +33,7 @@ class Button
     DERIVED_TYPE & derivedType = static_cast <DERIVED_TYPE &>(*this);
 
     public:
-        explicit Button (const ButtonSpace::TimeMax vTimeMax) : timeMax (vTimeMax) { }
+        explicit Button (const ButtonSpace::Timeout vTimeout) : timeout (vTimeout) { }
         ~Button () = default;
 
         bool                IsTouched  (void) { return derivedType.IsTouched ();                                    }
@@ -41,8 +41,8 @@ class Button
         bool                IsReleased (void) { return (Event () == ButtonSpace::EState::eReleased) ? true : false; }
         ButtonSpace::EState Event      (void)
         {
-            static ButtonSpace::EState state     = ButtonSpace::EState::eUntouched;
-            static bool                isPressed = false;
+            static ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
+            static bool                isPressed;
             static uint8_t             timePressed;
             static uint8_t             timeReleased;
 
@@ -50,7 +50,7 @@ class Button
             {
                 if (isPressed == false)
                 {
-                    if (++timePressed == timeMax.Pressed)
+                    if (++timePressed == timeout.Pressed)
                     {
                         isPressed   = true;
                         timePressed = ZERO;
@@ -66,7 +66,7 @@ class Button
             {
                 if (isPressed == true)
                 {
-                    if (++timeReleased == timeMax.Released)
+                    if (++timeReleased == timeout.Released)
                     {
                         isPressed    = false;
                         timeReleased = ZERO;
@@ -82,7 +82,7 @@ class Button
         }
 
     private:
-        const ButtonSpace::TimeMax timeMax;
+        const ButtonSpace::Timeout timeout;
 };
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// END OF FILE ///////////////////////////////////
