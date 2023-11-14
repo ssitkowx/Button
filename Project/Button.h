@@ -14,14 +14,20 @@ namespace ButtonSpace
 {
     enum class EState : uint8_t
     {
-        ePressed,
-        eReleased,
-        eUntouched
+        Released,
+        Untouched,
+        LongPressed,
+        ShortPressed
     };
 
     struct Timeout
     {
-        uint8_t Pressed;
+        struct
+        {
+            uint8_t Long;
+            uint8_t Short;
+        } Pressed;
+
         uint8_t Released;
     };
 }
@@ -36,12 +42,13 @@ class Button
         explicit Button (const ButtonSpace::Timeout vTimeout) : timeout (vTimeout) { }
         ~Button () = default;
 
-        bool                IsTouched  (void) { return derivedType.IsTouched ();                                    }
-        bool                IsPressed  (void) { return (Event () == ButtonSpace::EState::ePressed ) ? true : false; }
-        bool                IsReleased (void) { return (Event () == ButtonSpace::EState::eReleased) ? true : false; }
-        ButtonSpace::EState Event      (void)
+        bool                IsTouched      (void) { return derivedType.IsTouched ();                                        }
+        bool                IsLongPressed  (void) { return (Event () == ButtonSpace::EState::LongPressed)  ? true : false; }
+        bool                IsShortPressed (void) { return (Event () == ButtonSpace::EState::ShortPressed) ? true : false; }
+        bool                IsReleased     (void) { return (Event () == ButtonSpace::EState::Released)     ? true : false; }
+        ButtonSpace::EState Event (void)
         {
-            static ButtonSpace::EState state = ButtonSpace::EState::eUntouched;
+            static ButtonSpace::EState state = ButtonSpace::EState::Untouched;
             static bool                isPressed;
             static uint8_t             timePressed;
             static uint8_t             timeReleased;
@@ -50,34 +57,43 @@ class Button
             {
                 if (isPressed == false)
                 {
-                    if (++timePressed == timeout.Pressed)
+                    if (++timePressed == timeout.Pressed.Long)
                     {
                         isPressed   = true;
                         timePressed = ZERO;
-                        state       = ButtonSpace::EState::ePressed;
+                        state       = ButtonSpace::EState::LongPressed;
                     }
-                    else { state = ButtonSpace::EState::eUntouched; }
+                    else { state = ButtonSpace::EState::Untouched; }
                 }
-                else { state = ButtonSpace::EState::eUntouched; }
+                else { state = ButtonSpace::EState::Untouched; }
 
                 timeReleased = ZERO;
             }
             else
             {
+                if (timePressed >= timeout.Pressed.Short && timePressed < timeout.Pressed.Long)
+                {
+                    isPressed   = true;
+                    timePressed = ZERO;
+                    timeReleased++;
+                    return ButtonSpace::EState::ShortPressed;
+                }
+
                 if (isPressed == true)
                 {
                     if (++timeReleased == timeout.Released)
                     {
                         isPressed    = false;
                         timeReleased = ZERO;
-                        state        = ButtonSpace::EState::eReleased;
+                        state        = ButtonSpace::EState::Released;
                     }
-                    else { state = ButtonSpace::EState::eUntouched; }
+                    else { state = ButtonSpace::EState::Untouched; }
                 }
-                else { state = ButtonSpace::EState::eUntouched; }
+                else { state = ButtonSpace::EState::Untouched; }
 
                 timePressed = ZERO;
             }
+
             return state;
         }
 

@@ -17,7 +17,8 @@ class ButtonFixture : public ::testing::Test
     public:
         static constexpr char *           MODULE     = (char *)"ButtonFixture";
         const uint8_t                     Histeresis = TWO;
-        const struct ButtonSpace::Timeout Timeout    = { FOUR,  
+        const struct ButtonSpace::Timeout Timeout    = { EIGHT,
+                                                         FOUR,
                                                          EIGHT
                                                        };
         ButtonHw                          oButtonHw;
