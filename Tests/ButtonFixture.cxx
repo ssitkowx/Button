@@ -18,12 +18,12 @@ using ::testing::Sequence;
 //////////////////////////////// FUNCTIONS ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F (ButtonFixture, CheckIfButtonIsShortPressedAndReleased)
+TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
 {
-    LOGW (MODULE, "CheckIfButtonIsShortPressed");
+    LOGW (MODULE, "CheckIfButtonIsPressed");
 
     Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed.Short; pressedNum++)
+    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
@@ -34,7 +34,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsShortPressedAndReleased)
     }
 
     ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed.Short; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed; eventNum++)
     {
         state = oButtonHw.Event ();
         EXPECT_EQ (ButtonSpace::EState::Untouched, state);
@@ -46,7 +46,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsShortPressedAndReleased)
         if (eventNum == ZERO) 
         {
             state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::ShortPressed, state);
+            EXPECT_EQ (ButtonSpace::EState::Pressed, state);
         }
         else if (eventNum ==(ButtonFixture::Timeout.Released - ONE))
         {
@@ -61,12 +61,12 @@ TEST_F (ButtonFixture, CheckIfButtonIsShortPressedAndReleased)
     }
 }
 
-TEST_F (ButtonFixture, CheckIfButtonIsLongPressedAndReleased)
+TEST_F (ButtonFixture, CheckIfButtonIsHoldAndReleased)
 {
-    LOGW (MODULE, "CheckIfButtonIsLongPressedAndReleased");
+    LOGW (MODULE, "CheckIfButtonIsHoldAndReleased");
 
     Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed.Long; pressedNum++)
+    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Hold; pressedNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
@@ -77,13 +77,13 @@ TEST_F (ButtonFixture, CheckIfButtonIsLongPressedAndReleased)
     }
 
     ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed.Long; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold; eventNum++)
     {
 
         if (eventNum ==(ButtonFixture::Timeout.Released - ONE))
         {
             state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::LongPressed, state);
+            EXPECT_EQ (ButtonSpace::EState::Hold, state);
         }
         else
         {
@@ -115,7 +115,7 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
     EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed.Long; pressedNum++)
+    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Hold; pressedNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
@@ -126,13 +126,13 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
     }
 
     ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed.Long; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold; eventNum++)
     {
         ASSERT_EQ (ButtonSpace::EState::Untouched, state);
         state = oButtonHw.Event ();
     }
 
-    ASSERT_EQ (ButtonSpace::EState::LongPressed, state);
+    ASSERT_EQ (ButtonSpace::EState::Hold, state);
 
     state = ButtonSpace::EState::Untouched;
     for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Released; eventNum++)
@@ -144,14 +144,14 @@ TEST_F (ButtonFixture, CheckIfButtonIsReleased)
     ASSERT_EQ (ButtonSpace::EState::Released, state);
 }
 
-TEST_F (ButtonFixture, CheckIfButtonIsUntouchedAfterTooShortTimePressed)
+TEST_F (ButtonFixture, CheckIfButtonIsStillUntouchedAfterTooShortTimePressed)
 {
-    LOGW (MODULE, "CheckIfButtonIsUntouchedAfterTooShortTimePressed");
+    LOGW (MODULE, "CheckIfButtonIsStillUntouchedAfterTooShortTimePressed");
 
     EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
 
     ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed.Long - ONE; eventNum++)
+    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold - ONE; eventNum++)
     {
         EXPECT_EQ (ButtonSpace::EState::Untouched, state);
         state = oButtonHw.Event ();
