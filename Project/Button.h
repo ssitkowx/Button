@@ -12,7 +12,7 @@
 
 namespace ButtonSpace
 {
-    enum class EState : uint8_t
+    enum class EEvent : uint8_t
     {
         Hold,
         Pressed,
@@ -38,64 +38,69 @@ class Button
         explicit Button (const ButtonSpace::Timeout vTimeout) : timeout (vTimeout) { }
         ~Button () = default;
 
-        bool                IsTouched  (void) { return derivedType.IsTouched ();                                   }
-        bool                IsHold     (void) { return (Event () == ButtonSpace::EState::Hold)     ? true : false; }
-        bool                IsPressed  (void) { return (Event () == ButtonSpace::EState::Pressed)  ? true : false; }
-        bool                IsReleased (void) { return (Event () == ButtonSpace::EState::Released) ? true : false; }
-        ButtonSpace::EState Event      (void)
+        bool IsTouched  (void) { return derivedType.IsTouched ();                                }
+        bool IsHold     (void) { return (event == ButtonSpace::EEvent::Hold)     ? true : false; }
+        bool IsPressed  (void) { return (event == ButtonSpace::EEvent::Pressed)  ? true : false; }
+        bool IsReleased (void) { return (event == ButtonSpace::EEvent::Released) ? true : false; }
+        void Event      (void)
         {
-            static ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-            static bool                isPressed;
-            static uint8_t             timePressed;
-            static uint8_t             timeReleased;
-
             if (IsTouched () == true)
             {
-                if (isPressed == false)
+                if (state.IsPressed == false || state.IsHold == false)
                 {
-                    if (++timePressed == timeout.Hold)
+                    if (++state.Time.Pressed == timeout.Pressed)
                     {
-                        isPressed   = true;
-                        timePressed = ZERO;
-                        state       = ButtonSpace::EState::Hold;
+                        state.IsPressed = true;
+                        event           = ButtonSpace::EEvent::Pressed;
                     }
-                    else { state = ButtonSpace::EState::Untouched; }
+                    else if (state.Time.Pressed == timeout.Hold)
+                    {
+                        state.IsHold       = true;
+                        state.Time.Pressed = ZERO;
+                        event              = ButtonSpace::EEvent::Hold;
+                    }
+                    else { event = ButtonSpace::EEvent::Untouched; }
                 }
-                else { state = ButtonSpace::EState::Untouched; }
+                else { event = ButtonSpace::EEvent::Untouched; }
 
-                timeReleased = ZERO;
+                state.Time.Released = ZERO;
             }
             else
             {
-                if (timePressed >= timeout.Pressed && timePressed < timeout.Hold)
+                if (state.IsPressed == true || state.IsHold == true)
                 {
-                    isPressed   = true;
-                    timePressed = ZERO;
-                    timeReleased++;
-                    return ButtonSpace::EState::Pressed;
-                }
-
-                if (isPressed == true)
-                {
-                    if (++timeReleased == timeout.Released)
+                    if (++state.Time.Released == timeout.Released)
                     {
-                        isPressed    = false;
-                        timeReleased = ZERO;
-                        state        = ButtonSpace::EState::Released;
+                        state.IsHold        = false;
+                        state.IsPressed     = false;
+                        state.Time.Released = ZERO;
+                        event               = ButtonSpace::EEvent::Released;
                     }
-                    else { state = ButtonSpace::EState::Untouched; }
+                    else { event = ButtonSpace::EEvent::Untouched; }
                 }
-                else { state = ButtonSpace::EState::Untouched; }
+                else { event = ButtonSpace::EEvent::Untouched; }
 
-                timePressed = ZERO;
+                state.Time.Pressed = ZERO;
             }
-
-            return state;
         }
 
     private:
         const ButtonSpace::Timeout timeout;
+        ButtonSpace::EEvent        event = ButtonSpace::EEvent::Untouched;
+
+        struct
+        {
+            bool IsHold;
+            bool IsPressed;
+
+            struct
+            {
+                uint8_t Pressed;
+                uint8_t Released;
+            } Time;
+        } state;
 };
+
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// END OF FILE ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

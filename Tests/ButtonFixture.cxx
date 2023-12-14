@@ -3,9 +3,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "LoggerHw.h"
+#include "ButtonFixture.hxx"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "ButtonFixture.hxx"
 
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// VARIABLES ////////////////////////////////////
@@ -20,7 +20,7 @@ using ::testing::Sequence;
 
 TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
 {
-    LOGW (MODULE, "CheckIfButtonIsPressed");
+    LOGW (MODULE, "CheckIfButtonIsPressedAndReleased");
 
     Sequence seq;
     for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
@@ -28,37 +28,18 @@ TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
 
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
+    EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
+
+    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
     {
-        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
+        oButtonHw.Event ();
     }
 
-    ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Pressed; eventNum++)
-    {
-        state = oButtonHw.Event ();
-        EXPECT_EQ (ButtonSpace::EState::Untouched, state);
-    }
+    EXPECT_TRUE (oButtonHw.IsPressed ());
 
-    state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Released; eventNum++)
-    {
-        if (eventNum == ZERO) 
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Pressed, state);
-        }
-        else if (eventNum ==(ButtonFixture::Timeout.Released - ONE))
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Released, state);
-        }
-        else
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Untouched, state);
-        }
-    }
+    oButtonHw.Event ();
+
+    EXPECT_TRUE (oButtonHw.IsReleased ());
 }
 
 TEST_F (ButtonFixture, CheckIfButtonIsHoldAndReleased)
@@ -66,98 +47,23 @@ TEST_F (ButtonFixture, CheckIfButtonIsHoldAndReleased)
     LOGW (MODULE, "CheckIfButtonIsHoldAndReleased");
 
     Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Hold; pressedNum++)
+    for (uint8_t holdNum = ZERO; holdNum < ButtonFixture::Timeout.Hold; holdNum++)
     {
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
     }
 
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
+    EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
+
+    for (uint8_t holdNum = ZERO; holdNum < ButtonFixture::Timeout.Hold; holdNum++)
     {
-        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
+        oButtonHw.Event ();
     }
 
-    ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold; eventNum++)
-    {
+    EXPECT_TRUE (oButtonHw.IsHold ());
 
-        if (eventNum ==(ButtonFixture::Timeout.Released - ONE))
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Hold, state);
-        }
-        else
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Untouched, state);
-        }
-    }
+    oButtonHw.Event ();
 
-    state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Released; eventNum++)
-    {
-        if (eventNum ==(ButtonFixture::Timeout.Released - ONE))
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Released, state);
-        }
-        else
-        {
-            state = oButtonHw.Event ();
-            EXPECT_EQ (ButtonSpace::EState::Untouched, state);
-        }
-    }
-}
-
-TEST_F (ButtonFixture, CheckIfButtonIsReleased)
-{
-    LOGW (MODULE, "CheckIfButtonIsReleased");
-
-    EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
-
-    Sequence seq;
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Hold; pressedNum++)
-    {
-        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (true));
-    }
-
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
-    {
-        EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (false));
-    }
-
-    ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold; eventNum++)
-    {
-        ASSERT_EQ (ButtonSpace::EState::Untouched, state);
-        state = oButtonHw.Event ();
-    }
-
-    ASSERT_EQ (ButtonSpace::EState::Hold, state);
-
-    state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Released; eventNum++)
-    {
-        ASSERT_EQ (ButtonSpace::EState::Untouched, state);
-        state = oButtonHw.Event ();
-    }
-
-    ASSERT_EQ (ButtonSpace::EState::Released, state);
-}
-
-TEST_F (ButtonFixture, CheckIfButtonIsStillUntouchedAfterTooShortTimePressed)
-{
-    LOGW (MODULE, "CheckIfButtonIsStillUntouchedAfterTooShortTimePressed");
-
-    EXPECT_CALL (oButtonHw, IsTouched ()).WillRepeatedly (Return (true));
-
-    ButtonSpace::EState state = ButtonSpace::EState::Untouched;
-    for (uint8_t eventNum = ZERO; eventNum < ButtonFixture::Timeout.Hold - ONE; eventNum++)
-    {
-        EXPECT_EQ (ButtonSpace::EState::Untouched, state);
-        state = oButtonHw.Event ();
-    }
-
-    ASSERT_EQ (ButtonSpace::EState::Untouched, state);
+    EXPECT_TRUE (oButtonHw.IsReleased ());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

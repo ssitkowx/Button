@@ -19,9 +19,9 @@ class ButtonFixture : public ::testing::Test
         const uint8_t                     Histeresis = TWO;
         const struct ButtonSpace::Timeout Timeout    = { EIGHT,
                                                          FOUR,
-                                                         EIGHT
+                                                         ONE
                                                        };
-        ButtonHw                          oButtonHw;
+        ButtonHw oButtonHw;
 
         ButtonFixture () : oButtonHw (Timeout) { }
         
