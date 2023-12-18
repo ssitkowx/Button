@@ -4,7 +4,7 @@ import os
 
 class Conan(ConanFile):
     name            = "Button"
-    version         = "1.0"
+    version         = "1.2"
     user            = "ssitkowx"
     channel         = "stable"
     license         = "freeware"
