@@ -35,6 +35,8 @@ class Button
     DERIVED_TYPE & derivedType = static_cast <DERIVED_TYPE &>(*this);
 
     public:
+        ButtonSpace::EEvent event = ButtonSpace::EEvent::Untouched;
+        
         explicit Button (const ButtonSpace::Timeout vTimeout) : timeout (vTimeout) { }
         ~Button () = default;
 
@@ -42,7 +44,7 @@ class Button
         bool IsHold     (void) { return (event == ButtonSpace::EEvent::Hold)     ? true : false; }
         bool IsPressed  (void) { return (event == ButtonSpace::EEvent::Pressed)  ? true : false; }
         bool IsReleased (void) { return (event == ButtonSpace::EEvent::Released) ? true : false; }
-        void Event      (void)
+        void Process    (void)
         {
             if (IsTouched () == true)
             {
@@ -86,7 +88,6 @@ class Button
 
     private:
         const ButtonSpace::Timeout timeout;
-        ButtonSpace::EEvent        event = ButtonSpace::EEvent::Untouched;
 
         struct
         {

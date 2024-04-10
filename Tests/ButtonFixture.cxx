@@ -32,12 +32,12 @@ TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
 
     for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
     {
-        oButtonHw.Event ();
+        oButtonHw.Process ();
     }
 
     EXPECT_TRUE (oButtonHw.IsPressed ());
 
-    oButtonHw.Event ();
+    oButtonHw.Process ();
 
     EXPECT_TRUE (oButtonHw.IsReleased ());
 }
@@ -56,12 +56,12 @@ TEST_F (ButtonFixture, CheckIfButtonIsHoldAndReleased)
 
     for (uint8_t holdNum = ZERO; holdNum < ButtonFixture::Timeout.Hold; holdNum++)
     {
-        oButtonHw.Event ();
+        oButtonHw.Process ();
     }
 
     EXPECT_TRUE (oButtonHw.IsHold ());
 
-    oButtonHw.Event ();
+    oButtonHw.Process ();
 
     EXPECT_TRUE (oButtonHw.IsReleased ());
 }
