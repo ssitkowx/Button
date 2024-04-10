@@ -35,15 +35,15 @@ class Button
     DERIVED_TYPE & derivedType = static_cast <DERIVED_TYPE &>(*this);
 
     public:
-        ButtonSpace::EEvent event = ButtonSpace::EEvent::Untouched;
+        ButtonSpace::EEvent Event = ButtonSpace::EEvent::Untouched;
         
         explicit Button (const ButtonSpace::Timeout vTimeout) : timeout (vTimeout) { }
         ~Button () = default;
 
         bool IsTouched  (void) { return derivedType.IsTouched ();                                }
-        bool IsHold     (void) { return (event == ButtonSpace::EEvent::Hold)     ? true : false; }
-        bool IsPressed  (void) { return (event == ButtonSpace::EEvent::Pressed)  ? true : false; }
-        bool IsReleased (void) { return (event == ButtonSpace::EEvent::Released) ? true : false; }
+        bool IsHold     (void) { return (Event == ButtonSpace::EEvent::Hold)     ? true : false; }
+        bool IsPressed  (void) { return (Event == ButtonSpace::EEvent::Pressed)  ? true : false; }
+        bool IsReleased (void) { return (Event == ButtonSpace::EEvent::Released) ? true : false; }
         void Process    (void)
         {
             if (IsTouched () == true)
@@ -53,17 +53,17 @@ class Button
                     if (++state.Time.Pressed == timeout.Pressed)
                     {
                         state.IsPressed = true;
-                        event           = ButtonSpace::EEvent::Pressed;
+                        Event           = ButtonSpace::EEvent::Pressed;
                     }
                     else if (state.Time.Pressed == timeout.Hold)
                     {
                         state.IsHold       = true;
                         state.Time.Pressed = ZERO;
-                        event              = ButtonSpace::EEvent::Hold;
+                        Event              = ButtonSpace::EEvent::Hold;
                     }
-                    else { event = ButtonSpace::EEvent::Untouched; }
+                    else { Event = ButtonSpace::EEvent::Untouched; }
                 }
-                else { event = ButtonSpace::EEvent::Untouched; }
+                else { Event = ButtonSpace::EEvent::Untouched; }
 
                 state.Time.Released = ZERO;
             }
@@ -76,11 +76,11 @@ class Button
                         state.IsHold        = false;
                         state.IsPressed     = false;
                         state.Time.Released = ZERO;
-                        event               = ButtonSpace::EEvent::Released;
+                        Event               = ButtonSpace::EEvent::Released;
                     }
-                    else { event = ButtonSpace::EEvent::Untouched; }
+                    else { Event = ButtonSpace::EEvent::Untouched; }
                 }
-                else { event = ButtonSpace::EEvent::Untouched; }
+                else { Event = ButtonSpace::EEvent::Untouched; }
 
                 state.Time.Pressed = ZERO;
             }
