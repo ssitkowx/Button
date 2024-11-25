@@ -7,7 +7,7 @@ from conan.tools.cmake import CMake, cmake_layout
 
 class Conan(ConanFile):
     name            = "button"
-    version         = "1.2"
+    version         = "1.3"
     user            = "ssitkowx"
     channel         = "stable"
     license         = "freeware"
@@ -24,7 +24,7 @@ class Conan(ConanFile):
     downloadPath    = "/home/sylwester/.conan2/download"
     repoPath        = downloadPath + '/repos'
     packagePath     = downloadPath + '/packages'
-    packages        =  ["utils/1.2", "logger/1.2", "loggerhw/1.2"]
+    packages        =  ["utils/1.3", "logger/1.3", "loggerhw/1.3"]
 
     def layout (self):
         projectPath = os.getcwd ().replace ('/Conan','')
@@ -46,10 +46,12 @@ class Conan(ConanFile):
         packagePath = self.packagePath + '/' + self.name
 
         copy (self, '*.h'  , src = os.path.join (self.source_folder, "Project"), dst = os.path.join (packagePath, "include")        , keep_path = False)
+        copy (self, '*.hpp', src = os.path.join (self.source_folder, "Project"), dst = os.path.join (packagePath, "include")        , keep_path = False)
         copy (self, '*.hxx', src = os.path.join (self.source_folder, "Project"), dst = os.path.join (packagePath, "include")        , keep_path = False)
         copy (self, '*.a'  , src = self.build_folder                           , dst = os.path.join (packagePath, "lib")            , keep_path = False)
 
         copy (self, '*.h'  , src = os.path.join (self.source_folder, "Project"), dst = os.path.join (self.package_folder, "include"), keep_path = False)
+        copy (self, '*.hpp', src = os.path.join (self.source_folder, "Project"), dst = os.path.join (self.package_folder, "include"), keep_path = False)
         copy (self, '*.hxx', src = os.path.join (self.source_folder, "Project"), dst = os.path.join (self.package_folder, "include"), keep_path = False)
         copy (self, '*.a'  , src = self.build_folder                           , dst = os.path.join (self.package_folder, "lib")    , keep_path = False)
 
@@ -57,7 +59,9 @@ class Conan(ConanFile):
         receipePath = os.path.join (self.recipe_folder, "..")
 
         copy (self, "*.txt"        , receipePath, self.export_sources_folder)
+        copy (self, "Tests/*.hpp"  , receipePath, self.export_sources_folder)
         copy (self, "Tests/*.hxx"  , receipePath, self.export_sources_folder)
         copy (self, "Tests/*.cxx"  , receipePath, self.export_sources_folder)
         copy (self, "Project/*.h"  , receipePath, self.export_sources_folder)
+        copy (self, "Project/*.hpp", receipePath, self.export_sources_folder)
         copy (self, "Project/*.cpp", receipePath, self.export_sources_folder)
