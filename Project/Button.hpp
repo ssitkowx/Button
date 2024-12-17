@@ -99,7 +99,7 @@ class Button
                 uint8_t Pressed;
                 uint8_t Released;
             } Time;
-        } state;
+        } state = {};
 };
 
 ///////////////////////////////////////////////////////////////////////////////
