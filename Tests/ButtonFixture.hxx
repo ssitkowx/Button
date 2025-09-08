@@ -4,7 +4,6 @@
 //////////////////////////////// INCLUDES /////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "Utils.hpp"
 #include "Button.hpp"
 #include "ButtonHw.hpp"
 
@@ -15,11 +14,11 @@
 class ButtonFixture : public ::testing::Test
 {
     public:
-        static constexpr char *           MODULE     = (char *)"ButtonFixture";
-        const uint8_t                     Histeresis = TWO;
-        const struct ButtonSpace::Timeout Timeout    = { EIGHT,
-                                                         FOUR,
-                                                         FOUR
+        static constexpr char *           Module     = (char *)"ButtonFixture";
+        const uint8_t                     Histeresis = 2;
+        const struct ButtonSpace::Timeout Timeout    = { 8,
+                                                         4,
+                                                         4
                                                        };
         ButtonHw oButtonHw;
 

@@ -20,26 +20,26 @@ using ::testing::Sequence;
 
 TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
 {
-    LOGW (MODULE, "CheckIfButtonIsPressedAndReleased");
+    LOGW (Module, "CheckIfButtonIsPressedAndReleased");
 
     Sequence seq;
     bool     isTouched = true;
 
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed + ButtonFixture::Timeout.Released; pressedNum++)
+    for (uint8_t pressedNum = 0; pressedNum < ButtonFixture::Timeout.Pressed + ButtonFixture::Timeout.Released; pressedNum++)
     {
         if (pressedNum == ButtonFixture::Timeout.Pressed) { isTouched = false; }
 
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (isTouched));
     }
 
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
+    for (uint8_t pressedNum = 0; pressedNum < ButtonFixture::Timeout.Pressed; pressedNum++)
     {
         oButtonHw.Process ();
     }
 
     EXPECT_TRUE (oButtonHw.IsPressed ());
 
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
+    for (uint8_t releasedNum = 0; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
     {
         oButtonHw.Process ();
     }
@@ -49,26 +49,26 @@ TEST_F (ButtonFixture, CheckIfButtonIsPressedAndReleased)
 
 TEST_F (ButtonFixture, CheckIfButtonIsHoldAndReleased)
 {
-    LOGW (MODULE, "CheckIfButtonIsHoldAndReleased");
+    LOGW (Module, "CheckIfButtonIsHoldAndReleased");
 
     Sequence seq;
     bool     isTouched = true;
 
-    for (uint8_t pressedNum = ZERO; pressedNum < ButtonFixture::Timeout.Hold + ButtonFixture::Timeout.Released; pressedNum++)
+    for (uint8_t pressedNum = 0; pressedNum < ButtonFixture::Timeout.Hold + ButtonFixture::Timeout.Released; pressedNum++)
     {
         if (pressedNum == ButtonFixture::Timeout.Hold) { isTouched = false; }
 
         EXPECT_CALL (oButtonHw, IsTouched ()).InSequence (seq).WillOnce (Return (isTouched));
     }
 
-    for (uint8_t holdNum = ZERO; holdNum < ButtonFixture::Timeout.Hold; holdNum++)
+    for (uint8_t holdNum = 0; holdNum < ButtonFixture::Timeout.Hold; holdNum++)
     {
         oButtonHw.Process ();
     }
 
     EXPECT_TRUE (oButtonHw.IsHold ());
 
-    for (uint8_t releasedNum = ZERO; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
+    for (uint8_t releasedNum = 0; releasedNum < ButtonFixture::Timeout.Released; releasedNum++)
     {
         oButtonHw.Process ();
     }

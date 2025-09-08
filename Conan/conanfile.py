@@ -7,7 +7,7 @@ from conan.tools.cmake import CMake, cmake_layout
 
 class Conan(ConanFile):
     name            = "button"
-    version         = "1.3"
+    version         = "1.4"
     user            = "ssitkowx"
     channel         = "stable"
     license         = "freeware"
@@ -24,7 +24,7 @@ class Conan(ConanFile):
     downloadPath    = "/home/sylwester/.conan2/download"
     repoPath        = downloadPath + '/repos'
     packagePath     = downloadPath + '/packages'
-    packages        =  ["utils/1.3", "logger/1.3", "loggerhw/1.3"]
+    packages        =  ["logger/1.3", "loggerhw/1.4"]
 
     def layout (self):
         projectPath = os.getcwd ().replace ('/Conan','')

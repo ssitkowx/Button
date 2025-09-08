@@ -4,7 +4,7 @@
 //////////////////////////////// INCLUDES /////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "Utils.hpp"
+#include <stdint.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////// CLASSES/STRUCTURES ////////////////////////////////
@@ -58,14 +58,14 @@ class Button
                     else if (state.Time.Pressed == timeout.Hold)
                     {
                         state.IsHold       = true;
-                        state.Time.Pressed = ZERO;
+                        state.Time.Pressed = 0;
                         Event              = ButtonSpace::EEvent::Hold;
                     }
                     else { Event = ButtonSpace::EEvent::Untouched; }
                 }
                 else { Event = ButtonSpace::EEvent::Untouched; }
 
-                state.Time.Released = ZERO;
+                state.Time.Released = 0;
             }
             else
             {
@@ -75,14 +75,14 @@ class Button
                     {
                         state.IsHold        = false;
                         state.IsPressed     = false;
-                        state.Time.Released = ZERO;
+                        state.Time.Released = 0;
                         Event               = ButtonSpace::EEvent::Released;
                     }
                     else { Event = ButtonSpace::EEvent::Untouched; }
                 }
                 else { Event = ButtonSpace::EEvent::Untouched; }
 
-                state.Time.Pressed = ZERO;
+                state.Time.Pressed = 0;
             }
         }
 
